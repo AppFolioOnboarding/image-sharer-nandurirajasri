@@ -5,4 +5,8 @@ Rails.application.routes.draw do
   get '/tagged', to: 'images#tagged', as: :tagged
   root 'application#home'
   resources :feedbacks, only: [:new]
+
+  namespace :api do
+    resource :feedbacks, only: [:create]
+  end
 end
