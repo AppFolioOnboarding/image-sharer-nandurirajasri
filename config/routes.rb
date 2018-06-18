@@ -3,4 +3,6 @@ Rails.application.routes.draw do
   root 'images#index'
   resources :images, only: %i[new create show index destroy]
   get '/tagged', to: 'images#tagged', as: :tagged
+  root 'application#home'
+  resources :feedbacks, only: [:new]
 end
