@@ -104,7 +104,6 @@ GEM
     parallel (1.12.1)
     parser (2.5.1.0)
       ast (~> 2.4.0)
-    pg (1.0.0)
     powerpack (0.1.2)
     pronto (0.9.5)
       gitlab (~> 4.0, >= 4.0.0)
@@ -227,7 +226,6 @@ DEPENDENCIES
   capybara
   jquery-rails
   listen (~> 3.0.5)
-  pg
   pronto-rubocop
   puma (~> 3.0)
   rails (~> 5.2.0)
@@ -245,4 +243,4 @@ RUBY VERSION
    ruby 2.5.3p105
 
 BUNDLED WITH
-   1.16.6
+   1.17.3
