@@ -4,6 +4,12 @@
   <p>
     <%= form.label :url %>
     <%= form.text_field :url %>
+    <% if @image.errors.any? %>
+      <% @image.errors[:url].each do |msg| %>
+        <p class='error'><%= msg %></p>
+      <% end %>
+
+    <% end %>
   </p>
 
   <p>

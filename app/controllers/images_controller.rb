@@ -6,6 +6,7 @@ class ImagesController < ApplicationController
   def create
     @image = Image.new(params.require(:image).permit(:url))
     if @image.save
+      flash[:success] = 'Successfully saved Image Link!'
       redirect_to @image
     else
       render 'new'
