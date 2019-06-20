@@ -1,3 +1,7 @@
+<%- flash.each do |name, message| %>
+  <p class='flash'><i><%= "#{message}" %></i></p>
+<% end %>
+
 <p>
   <strong>URL:</strong>
   <%= @image.url %><br>
