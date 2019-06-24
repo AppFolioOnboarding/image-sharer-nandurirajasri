@@ -39,14 +39,13 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'p', 'Invalid id!'
   end
 
-  test 'Index displays all images' do
-    Image.create!(url: 'https://tinyurl.com/yyh2ey7v')
-    Image.create!(url: 'https://tinyurl.com/yyh2ey7v')
+  test 'Index Displays all images' do
+    Image.create!(url: 'https://tinyurl.com/123')
+    Image.create!(url: 'https://tinyurl.com/456')
     get images_path
-    assert_select 'h1', 'Listing Images'
-    assert_select 'table', count: 1
-    assert_select 'td', count: 4
     assert_select "a[href='#{new_image_path}']", count: 1
+    assert_select 'h4', 'Listing Images'
+    assert_select 'img', count: Image.count
   end
 
   test 'Index works with no images' do
