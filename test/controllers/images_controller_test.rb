@@ -12,12 +12,15 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     post images_path,
          params: { image: { url: 'https://tinyurl.com/yyh2ey7v' } }
     assert_redirected_to image_path(Image.last)
+    follow_redirect!
+    assert_select 'p', 'Successfully saved Image Link!'
   end
 
   test 'Create throws error for invalid URL' do
     post images_path,
          params: { image: { url: 'this url is not valid' } }
     assert_response :unprocessable_entity
+    assert_select 'p', 'Unable to save Image Link!'
     assert_select 'span', 'Invalid URL. Please try again.'
     assert_select 'form', true, 'This page must contain a form'
   end
