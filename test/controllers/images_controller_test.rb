@@ -9,16 +9,18 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'Create accepts a valid URL' do
+    tags = 'these, are, tags'
     post images_path,
-         params: { image: { url: 'https://tinyurl.com/yyh2ey7v' } }
+         params: { image: { url: 'https://tinyurl.com/yyh2ey7v', tag_list: tags } }
     assert_redirected_to image_path(Image.last)
     follow_redirect!
     assert_select 'p', 'Successfully saved Image Link!'
+    assert_select 'span', tags, 1
   end
 
   test 'Create throws error for invalid URL' do
     post images_path,
-         params: { image: { url: 'this url is not valid' } }
+         params: { image: { url: 'this url is not valid', tag_list: 'tag' } }
     assert_response :unprocessable_entity
     assert_select 'p', 'Unable to save Image Link!'
     assert_select 'span', 'Invalid URL. Please try again.'
