@@ -9,7 +9,9 @@
       <%= image_tag image.url %>
       <% if image.tag_list.present? %>
         <br>
-        <div class='tags'> <%= image.tag_list%> </div>
+        <p><% image.tag_list.each do |tag| %>
+            <%= link_to tag, tagged_path(tag: tag) %>
+          <% end %></p>
       <% end %>
     </div>
   <% end %>

@@ -93,7 +93,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select '.image-display' do |images|
       images.each do |image|
         assert_select image, 'img', count: 1
-        assert_select image, '.tags', tags, 1
+        assert_select image, 'a', count: tags.split(/\s*,\s*/).count
       end
     end
   end
@@ -106,8 +106,28 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select '.image-display' do |images|
       images.each do |image|
         assert_select image, 'img', count: 1
-        assert_select image, '.tags', count: 0
+        assert_select image, 'a', count: 0
       end
     end
+  end
+
+  test 'Tagged renders images filtered by the specified tag' do
+    tags1 = 'first, tag'
+    tags2 = 'tag, second'
+    Image.create!(url: 'https://tinyurl.com/123', tag_list: tags1)
+    Image.create!(url: 'https://tinyurl.com/456', tag_list: tags2)
+    get '/tagged?tag=first'
+    assert_select '.image-display', count: 1
+    get '/tagged?tag=tag'
+    assert_select '.image-display', count: 2
+    get '/tagged?tag=second'
+    assert_select '.image-display', count: 1
+  end
+
+  test 'Tagged handles invalid tag name' do
+    get '/tagged?tag=invalidtag'
+    assert_select 'p', 'No images found for the specified tag!'
+    assert_select '.image-display', count: 0
+    assert_select "a[href='#{images_path}']", count: 1
   end
 end

@@ -1,0 +1,14 @@
+<h1>Tagged Images</h1>
+<div class='image-list'>
+  <% @images.each do |image| %>
+    <div class='image-display'>
+      <%= image_tag image.url %>
+      <br>
+      <p><% image.tag_list.each do |tag| %>
+          <%= link_to tag, tagged_path(tag: tag) %>
+        <% end %></p>
+    </div>
+  <% end %>
+</div>
+<br>
+<%= link_to '< Back to viewing all Images', images_path %>

@@ -24,4 +24,14 @@ class ImagesController < ApplicationController
   def index
     @images = Image.all.order('created_at DESC')
   end
+
+  def tagged
+    @images = if params[:tag].present?
+                images = Image.tagged_with(params[:tag])
+                flash[:warning] = 'No images found for the specified tag!' if images.count < 1
+                images
+              else
+                Image.all
+              end
+  end
 end
