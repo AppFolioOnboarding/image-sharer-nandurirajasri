@@ -3,8 +3,14 @@
 
 <br>
 <h4>Listing Images</h4>
-<p class='image-list'>
+<div class='image-list'>
   <% @images.each do |image| %>
-    <%= image_tag image.url %>
+    <div class='image-display'>
+      <%= image_tag image.url %>
+      <% if image.tag_list.present? %>
+        <br>
+        <div class='tags'> <%= image.tag_list%> </div>
+      <% end %>
+    </div>
   <% end %>
-</p>
+</div>

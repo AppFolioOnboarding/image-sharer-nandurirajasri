@@ -35,11 +35,28 @@ body {
 
 img {
   max-width: 400px;
+}
+
+.image-list, .tags  {
   display: inline-block;
-  width: 40%;
+}
+
+.image-display {
+  display: inline-table;
   padding: 0px 10px 10px 0px;
 }
 
-.image-list {
+label {
   display: inline-block;
+  width: 5%;
 }
+
+input {
+  width: 15%;
+  display: inline-block;
+  &.btn {
+    width: 150px;
+    margin-top: 0px;
+  }
+}
+

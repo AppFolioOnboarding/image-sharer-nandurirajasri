@@ -3,6 +3,10 @@
   <strong>URL:</strong>
   <%= @image.url %><br>
   <strong>Image:</strong>
-  <%= image_tag @image.url %>
+  <%= image_tag @image.url %><br>
+  <% if @image.tag_list.present? %>
+    <strong>Tags: </strong>
+    <span><%= @image.tag_list%></span>
+  <% end %>
 </p>
 <%= link_to 'Back', images_path %>

@@ -19,4 +19,17 @@ class ImageTest < ActiveSupport::TestCase
     image.url = 'https://tinyurl.com/yyh2ey7v'
     assert_predicate image, :valid?
   end
+
+  test 'Save a URL with tags' do
+    image = Image.new
+    image.url = 'https://tinyurl.com/yyh2ey7v'
+    image.tag_list = 'testing, tags'
+    assert_predicate image, :valid?
+  end
+
+  test 'Save URL with empty tags' do
+    image = Image.new
+    image.url = 'https://tinyurl.com/yyh2ey7v'
+    assert_predicate image, :valid?
+  end
 end
