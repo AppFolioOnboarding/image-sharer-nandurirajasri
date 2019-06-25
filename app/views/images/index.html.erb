@@ -1,15 +1,10 @@
 <h1>Listing Images</h1>
 <%= link_to 'New Image', new_image_path %>
-<table>
-  <tr>
-    <th>URL</th>
-    <th></th>
-  </tr>
 
+<br>
+<h4>Listing Images</h4>
+<p class='image-list'>
   <% @images.each do |image| %>
-    <tr>
-      <td><%= image.url %></td>
-      <td><%= link_to 'Show', image_path(image) %></td>
-    </tr>
+    <%= image_tag image.url %>
   <% end %>
-</table>
+</p>

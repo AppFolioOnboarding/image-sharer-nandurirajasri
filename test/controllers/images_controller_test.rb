@@ -39,14 +39,26 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'p', 'Invalid id!'
   end
 
-  test 'Index displays all images' do
-    Image.create!(url: 'https://tinyurl.com/yyh2ey7v')
-    Image.create!(url: 'https://tinyurl.com/yyh2ey7v')
+  test 'Index Displays all images' do
+    Image.create!(url: 'https://tinyurl.com/123')
+    Image.create!(url: 'https://tinyurl.com/456')
     get images_path
-    assert_select 'h1', 'Listing Images'
-    assert_select 'table', count: 1
-    assert_select 'td', count: 4
     assert_select "a[href='#{new_image_path}']", count: 1
+    assert_select 'h4', 'Listing Images'
+    assert_select 'img', count: Image.count
+  end
+
+  test 'Index Displays all images in reverse order of addition' do
+    url1 = 'https://tinyurl.com/123'
+    url2 = 'https://tinyurl.com/456'
+    Image.create!(url: url1, created_at: Time.zone.now - 10.minutes)
+    Image.create!(url: url2, created_at: Time.zone.now - 5.minutes)
+    get images_path
+    assert_select 'img', count: Image.count
+    assert_select 'img' do |images|
+      assert_equal url2, images.first.attribute('src').value
+      assert_equal url1, images.last.attribute('src').value
+    end
   end
 
   test 'Index works with no images' do
