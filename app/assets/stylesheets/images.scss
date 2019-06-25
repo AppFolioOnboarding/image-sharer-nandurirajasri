@@ -35,13 +35,15 @@ body {
 
 img {
   max-width: 400px;
-  display: inline-block;
-  width: 40%;
-  padding: 0px 10px 10px 0px;
 }
 
-.image-list {
+.image-list, .tags  {
   display: inline-block;
+}
+
+.image-display {
+  display: inline-table;
+  padding: 0px 10px 10px 0px;
 }
 
 label {

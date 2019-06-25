@@ -41,6 +41,21 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'p', 'Invalid id!'
   end
 
+  test 'Show displays tags for images' do
+    tags = 'testing, tags'
+    image = Image.create!(url: 'https://tinyurl.com/123', tag_list: tags)
+    get image_path(image)
+    assert_select "a[href='#{images_path}']", count: 1
+    assert_select 'span', tags, 1
+  end
+
+  test 'Show renders properly when tags are not present' do
+    image = Image.create!(url: 'https://tinyurl.com/123')
+    get image_path(image)
+    assert_select "a[href='#{images_path}']", count: 1
+    assert_select 'span', 0
+  end
+
   test 'Index Displays all images' do
     Image.create!(url: 'https://tinyurl.com/123')
     Image.create!(url: 'https://tinyurl.com/456')
@@ -67,5 +82,32 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     get images_path
     assert_select 'h1', 'Listing Images'
     assert_select 'td', count: 0
+  end
+
+  test 'Index displays tags for images' do
+    tags = 'testing, tags'
+    Image.create!(url: 'https://tinyurl.com/123', tag_list: tags)
+    Image.create!(url: 'https://tinyurl.com/456', tag_list: tags)
+    get images_path
+    assert_select '.image-display', count: Image.count
+    assert_select '.image-display' do |images|
+      images.each do |image|
+        assert_select image, 'img', count: 1
+        assert_select image, '.tags', tags, 1
+      end
+    end
+  end
+
+  test 'Index renders properly when tags are not present' do
+    Image.create!(url: 'https://tinyurl.com/123')
+    Image.create!(url: 'https://tinyurl.com/456')
+    get images_path
+    assert_select '.image-display', count: Image.count
+    assert_select '.image-display' do |images|
+      images.each do |image|
+        assert_select image, 'img', count: 1
+        assert_select image, '.tags', count: 0
+      end
+    end
   end
 end
