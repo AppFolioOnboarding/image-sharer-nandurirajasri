@@ -1,0 +1,39 @@
+$error-color: #ff4d4d;
+$error-background-color: #ffc8c7;
+$button-color: #ffea73;
+
+.error {
+  color: $error-color;
+  display: inherit;
+}
+
+body {
+  padding: 15px;
+}
+
+.flash {
+  animation: blinker 0.5s linear infinite;
+  padding-left: 10px;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.alert-error {
+  color: $error-color;
+  background-color: $error-background-color;
+  border-color: $error-background-color;
+}
+
+.btn {
+  background: $button-color;
+  margin: 20px 0px 10px 0px;
+}
+
+img {
+  max-width: 400px;
+}
+
