@@ -48,6 +48,19 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'img', count: Image.count
   end
 
+  test 'Index Displays all images in reverse order of addition' do
+    url1 = 'https://tinyurl.com/123'
+    url2 = 'https://tinyurl.com/456'
+    Image.create!(url: url1, created_at: Time.zone.now - 10.minutes)
+    Image.create!(url: url2, created_at: Time.zone.now - 5.minutes)
+    get images_path
+    assert_select 'img', count: Image.count
+    assert_select 'img' do |images|
+      assert_equal url2, images.first.attribute('src').value
+      assert_equal url1, images.last.attribute('src').value
+    end
+  end
+
   test 'Index works with no images' do
     get images_path
     assert_select 'h1', 'Listing Images'
