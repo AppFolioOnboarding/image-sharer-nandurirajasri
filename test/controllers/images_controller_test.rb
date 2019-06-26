@@ -93,7 +93,8 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select '.image-display' do |images|
       images.each do |image|
         assert_select image, 'img', count: 1
-        assert_select image, 'a', count: tags.split(/\s*,\s*/).count
+        assert_select image, '.tag-link a', count: tags.split(/\s*,\s*/).count
+        assert_select image, '.delete-link', count: 1
       end
     end
   end
@@ -106,7 +107,8 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select '.image-display' do |images|
       images.each do |image|
         assert_select image, 'img', count: 1
-        assert_select image, 'a', count: 0
+        assert_select image, '.tag-link a', count: 0
+        assert_select image, '.delete-link', count: 1
       end
     end
   end
@@ -129,5 +131,18 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'p', 'No images found for the specified tag!'
     assert_select '.image-display', count: 0
     assert_select "a[href='#{images_path}']", count: 1
+  end
+
+  test 'Destroy ' do
+    Image.create!(url: 'https://tinyurl.com/123')
+    Image.create!(url: 'https://tinyurl.com/456')
+    get images_path
+    assert_select '.image-display' do |images|
+      images.each do |image|
+        assert_select image, '.delete-link', count: 1
+        assert_select image, 'a[data-method="delete"]', count: 1
+        assert_select image, 'a[data-confirm="Are you sure you want to delete this image?"]', count: 1
+      end
+    end
   end
 end
