@@ -6,11 +6,12 @@ module PageObjects
       end
 
       def tags
-        # TODO
+        node.all('.tag-link .image-tag').map(&:text)
       end
 
       def click_tag!(tag_name)
-        # TODO
+        node.find('.tag-link .image-tag', text: tag_name.to_s).click
+        window.change_to(TaggedPage)
       end
     end
   end

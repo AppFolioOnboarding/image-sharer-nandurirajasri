@@ -1,4 +1,4 @@
-require 'flow_test_helper'
+require 'flow_test_helper.rb'
 
 class ImagesCrudTest < FlowTestCase
   test 'add an image' do
@@ -11,19 +11,19 @@ class ImagesCrudTest < FlowTestCase
       url: 'invalid',
       tags: tags.join(', ')
     ).as_a(PageObjects::Images::NewPage)
-    assert_equal 'must be a valid URL', new_image_page.url.error_message
+    assert_equal 'Invalid URL. Please try again.', new_image_page.url_error.text
 
     image_url = 'https://media3.giphy.com/media/EldfH1VJdbrwY/200.gif'
     new_image_page.url.set(image_url)
 
     image_show_page = new_image_page.create_image!
-    assert_equal 'You have successfully added an image.', image_show_page.flash_message(:success)
+    assert_equal 'Successfully saved Image Link!', image_show_page.flash_message(:success)
 
     assert_equal image_url, image_show_page.image_url
-    assert_equal tags, image_show_page.tags
+    assert_equal tags.join(', '), image_show_page.tags
 
     images_index_page = image_show_page.go_back_to_index!
-    assert images_index_page.showing_image?(url: image_url, tags: tags)
+    assert images_index_page.showing_image?(url: image_url)
   end
 
   test 'delete an image' do
@@ -42,15 +42,18 @@ class ImagesCrudTest < FlowTestCase
     image_to_delete = images_index_page.images.find do |image|
       image.url == ugly_cat_url
     end
-    image_show_page = image_to_delete.view!
 
-    image_show_page.delete do |confirm_dialog|
-      assert_equal 'Are you sure?', confirm_dialog.text
+    image_to_delete.delete do |confirm_dialog|
+      assert_equal 'Are you sure you want to delete this image?', confirm_dialog.text
       confirm_dialog.dismiss
     end
 
-    images_index_page = image_show_page.delete_and_confirm!
-    assert_equal 'You have successfully deleted the image.', images_index_page.flash_message(:success)
+    image_to_delete.delete do |confirm_dialog|
+      assert_equal 'Are you sure you want to delete this image?', confirm_dialog.text
+      confirm_dialog.accept
+    end
+
+    assert_equal 'Image has been deleted successfully', images_index_page.flash_message(:deleted)
 
     assert_equal 1, images_index_page.images.count
     assert_not images_index_page.showing_image?(url: ugly_cat_url)
@@ -72,12 +75,12 @@ class ImagesCrudTest < FlowTestCase
       assert images_index_page.showing_image?(url: url)
     end
 
-    images_index_page = images_index_page.images[1].click_tag!('cute')
+    tagged_page = images_index_page.images[1].click_tag!('cute')
 
-    assert_equal 2, images_index_page.images.count
-    assert_not images_index_page.showing_image?(url: cat_url)
+    assert_equal 2, tagged_page.images.count
+    assert_not tagged_page.showing_image?(url: cat_url)
 
-    images_index_page = images_index_page.clear_tag_filter!
-    assert_equal 3, images_index_page.images.count
+    index_page = tagged_page.back_to_index!
+    assert_equal 3, index_page.images.count
   end
 end

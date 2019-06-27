@@ -11,7 +11,7 @@
         <br>
         <span>Tags: </span>
         <p class='tag-link'><% image.tag_list.each do |tag| %>
-            <%= link_to tag, tagged_path(tag: tag) %>
+            <%= link_to tag, tagged_path(tag: tag), class: 'image-tag' %>
           <% end %></p>
       <% end %>
       <%= link_to 'Destroy', image_path(image), class: 'delete-link',
