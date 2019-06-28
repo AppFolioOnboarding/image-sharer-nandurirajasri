@@ -6,7 +6,7 @@
   <%= image_tag @image.url %><br>
   <% if @image.tag_list.present? %>
     <strong>Tags: </strong>
-    <span><%= @image.tag_list%></span>
+    <span class="tag_list"><%= @image.tag_list%></span>
   <% end %>
 </p>
-<%= link_to 'Back', images_path %>
+<%= link_to 'Back', images_path, class: 'back-to' %>

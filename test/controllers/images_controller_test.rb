@@ -63,6 +63,13 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href='#{new_image_path}']", count: 1
     assert_select 'h4', 'Listing Images'
     assert_select 'img', count: Image.count
+    assert_select '.image-display' do |images|
+      images.each do |image|
+        assert_select image, '.delete-link', count: 1
+        assert_select image, 'a[data-method="delete"]', count: 1
+        assert_select image, 'a[data-confirm="Are you sure you want to delete this image?"]', count: 1
+      end
+    end
   end
 
   test 'Index Displays all images in reverse order of addition' do
@@ -93,7 +100,8 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select '.image-display' do |images|
       images.each do |image|
         assert_select image, 'img', count: 1
-        assert_select image, 'a', count: tags.split(/\s*,\s*/).count
+        assert_select image, '.tag-link a', count: tags.split(/\s*,\s*/).count
+        assert_select image, '.delete-link', count: 1
       end
     end
   end
@@ -106,7 +114,8 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select '.image-display' do |images|
       images.each do |image|
         assert_select image, 'img', count: 1
-        assert_select image, 'a', count: 0
+        assert_select image, '.tag-link a', count: 0
+        assert_select image, '.delete-link', count: 1
       end
     end
   end
@@ -129,5 +138,30 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'p', 'No images found for the specified tag!'
     assert_select '.image-display', count: 0
     assert_select "a[href='#{images_path}']", count: 1
+  end
+
+  test 'Destroy deletes the image' do
+    url1 = 'https://tinyurl.com/123'
+    Image.create!(url: url1)
+    Image.create!(url: 'https://tinyurl.com/456')
+    delete image_path(Image, id: Image.find_by(url: url1).id)
+    assert_redirected_to images_path
+    follow_redirect!
+    assert_select 'p', 'Image has been deleted successfully'
+    assert_select '.image-display', count: 1
+  end
+
+  test 'Destroy handles invalid image deletion' do
+    image = Image.create!(url: 'https://tinyurl.com/123')
+    id = image.id
+    delete image_path(Image, id: id)
+    assert_redirected_to images_path
+    follow_redirect!
+    assert_select 'p', 'Image has been deleted successfully'
+    assert_select '.image-display', count: 0
+    delete image_path(Image, id: id)
+    assert_redirected_to images_path
+    follow_redirect!
+    assert_select 'p', 'Image could not be deleted. Either the image doesn\'t exist or try again later'
   end
 end
