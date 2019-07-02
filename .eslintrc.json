@@ -10,5 +10,8 @@
     "import/resolver": {
       "webpack": {}
     }
+  },
+  "rules": {
+    "jsx-a11y/label-has-for": 0
   }
 }
