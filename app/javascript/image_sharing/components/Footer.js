@@ -8,7 +8,7 @@ class Footer extends Component {
 
   render() {
     const copyright = this.props.copyright;
-    return (<div className='text-center' style={{ 'font-size': '10px' }}>{copyright}</div>);
+    return (<div className='text-center' style={{ fontSize: '10px' }}>{copyright}</div>);
   }
 }
 
