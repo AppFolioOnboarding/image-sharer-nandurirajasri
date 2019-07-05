@@ -6,6 +6,7 @@ import { describe, it } from 'mocha';
 import sinon from 'sinon';
 import { Provider } from 'mobx-react';
 import Form from '../../components/Form';
+import FeedbackService from '../../services/PostFeedbackService';
 
 describe('<Form />', () => {
   let wrapper;
@@ -87,7 +88,28 @@ describe('<Form />', () => {
   describe('Submit', () => {
     it('should display a button for Submit', () => {
       expect(wrapper.find('button')).to.have.lengthOf(1);
-      expect(wrapper.find('button').text()).to.equal(' Submit ');
+      expect(wrapper.find('button').text()).to.equal('Submit');
+    });
+    it('should show a success message when submitted with a non-empty name field', () => {
+      const mockData = {
+        name,
+        comments
+      };
+      sinon.stub(FeedbackService.prototype, 'submitFeedback')
+        .returns(Promise.resolve(mockData));
+
+      return wrapper.find('button').props().onClick().then(() => {
+        expect(wrapper.find('p#submitResponse').text()).to.equal('Successfully submitted the feedback!');
+      });
+    });
+
+    it('should show a failure message when submitted with an empty name field', () => {
+      sinon.stub(FeedbackService.prototype, 'submitFeedback')
+        .returns(Promise.reject());
+
+      return wrapper.find('button').props().onClick().then(() => {
+        expect(wrapper.find('p#submitResponse').text()).to.equal('Error while submitting the feedback!');
+      });
     });
   });
 });

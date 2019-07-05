@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
+import FeedbackService from '../services/PostFeedbackService';
 
 @inject('stores')
 @observer
 class Form extends Component {
+  state = {
+    responseMessage: ''
+  };
+
   render() {
     const feedbackStore = this.props.stores.feedbackStore;
     return (
@@ -29,7 +34,23 @@ class Form extends Component {
             value={feedbackStore.comments}
             onChange={(e) => { feedbackStore.setComments(e.target.value); }}
           />
-          <button type="submit" className='btn btn-primary'> Submit </button>
+          <button
+            type="button"
+            className='btn btn-primary'
+            onClick={() => {
+              const feedbackService = new FeedbackService();
+              return feedbackService.submitFeedback(feedbackStore)
+                .then((res) => {
+                  this.setState({ responseMessage: 'Successfully submitted the feedback!' });
+                  return res;
+                })
+                .catch(() => {
+                  this.setState({ responseMessage: 'Error while submitting the feedback!' });
+                });
+            }}
+          >Submit
+          </button>
+          <p id="submitResponse" className='text-info'>{this.state.responseMessage}</p>
         </form>
       </div>
     );
