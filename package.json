@@ -32,6 +32,8 @@
     "mocha": "^5.2.0",
     "react-test-renderer": "^16.8.4",
     "sinon": "^6.0.1",
+    "nock": "^10.0.6",
+    "node-fetch": "^2.6.0",
     "webpack-dev-server": "^3.2.1"
   },
   "scripts": {
